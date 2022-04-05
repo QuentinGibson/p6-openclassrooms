@@ -1,0 +1,16 @@
+{
+  "name": "p6",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "babel-node src/index.js",
+    "build": "babel src -d dist",
+    "postinstall": "npm run build",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
