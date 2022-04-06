@@ -25,33 +25,39 @@ exports.getSauce = (req, res, next) => {
 };
 
 exports.createSauce = (req, res, next) => {
-  if (!req.file) {
-  }
-  const newSauce = req.body.sauce;
-  const {
-    name,
-    manufacturer,
-    description,
-    mainPepper,
-    heat,
-    likes,
-    dislikes,
-    userDislikes,
-    userLikes,
-  } = newSauce;
+  let sauce;
+  if (req.file) {
+    const url = req.protocol + "://" + req.get("host");
+    const { name, manufacturer, description, mainPepper, heat } = JSON.parse(
+      req.body.sauce
+    );
 
-  const sauce = new Sauce({
-    name,
-    manufacturer,
-    description,
-    imageUrl: url + "/images/" + req.file.filename,
-    mainPepper,
-    heat,
-    likes,
-    dislikes,
-    userLikes,
-    userDislikes,
-  });
+    sauce = new Sauce({
+      name,
+      manufacturer,
+      description,
+      imageUrl: url + "/images/" + req.file.filename,
+      mainPepper,
+      heat,
+      likes: 0,
+      dislikes: 0,
+      userLikes: [],
+      userDislikes: [],
+    });
+  } else {
+    sauce = {
+      name: req.body.name,
+      manufacturer: req.body.manufacturer,
+      description: req.body.description,
+      imageUrl: "",
+      mainPepper: req.body.mainPepper,
+      heat: req.body.heat,
+      likes: 0,
+      dislikes: 0,
+      userLikes: [],
+      userDislikes: [],
+    };
+  }
   sauce
     .save()
     .then(() => {
