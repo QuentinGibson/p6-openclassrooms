@@ -1,5 +1,3 @@
-const req = require("express/lib/request");
-const sauce = require("../models/sauce");
 const Sauce = require("../models/sauce");
 
 exports.getAll = (req, res, next) => {
@@ -73,9 +71,62 @@ exports.createSauce = (req, res, next) => {
 };
 
 exports.updateSauce = (req, res, next) => {
-  const newSauce = req.body.sauce;
-  sauce
-    .findById({ _id: req.params.id, newSauce }, newSauce)
+  let sauce = new Sauce({ _id: req.params._id });
+  if (req.file) {
+    const url = req.protocol + "://" + req.get("host");
+    req.body.sauce = JSON.parse(req.body.sauce);
+    const {
+      name,
+      manufacturer,
+      description,
+      mainPepper,
+      heat,
+      likes,
+      dislikes,
+      userLikes,
+      userDislikes,
+    } = req.body.sauce;
+    sauce = {
+      _id: req.params._id,
+      userId: "userid",
+      name,
+      manufacturer,
+      description,
+      mainPepper,
+      imageUrl: url + "/images/" + req.file.filename,
+      heat,
+      likes,
+      dislikes,
+      userLikes,
+      userDislikes,
+    };
+  } else {
+    const {
+      name,
+      manufacturer,
+      description,
+      mainPepper,
+      heat,
+      likes,
+      dislikes,
+      userLikes,
+      userDislikes,
+    } = req.body;
+    sauce = {
+      _id: req.params._id,
+      userId: "userId",
+      name,
+      manufacturer,
+      description,
+      mainPepper,
+      heat,
+      likes,
+      dislikes,
+      userLikes,
+      userDislikes,
+    };
+  }
+  Sauce.findByIdAndUpdate({ _id: req.params.id }, sauce)
     .then(() => {
       res.status(201).json({
         message: "Sauce updated successfully",
@@ -87,8 +138,7 @@ exports.updateSauce = (req, res, next) => {
 };
 
 exports.deleteSauce = (req, res, next) => {
-  sauce
-    .findOne({ _id: req.params.id })
+  Sauce.findByIdAndRemove({ _id: req.params.id })
     .then((sauce) => {
       if (!sauce) {
         return res.status(404).json({
@@ -100,20 +150,13 @@ exports.deleteSauce = (req, res, next) => {
           error: new Error("Sauce not found"),
         });
       }
-      sauce
-        .deleteOne({ _id: req.params.id })
-        .then(() => {
-          res.status(201).json({
-            message: "Sauce deleted successfully",
-          });
-        })
-        .catch((error) => {
-          res.status(400).json({
-            error,
-          });
-        });
+      res.status(201).json({
+        message: "Sauce deleted successfully",
+      });
     })
     .catch((error) => {
-      res.status(400).json({ error });
+      res.status(400).json({
+        error,
+      });
     });
 };
