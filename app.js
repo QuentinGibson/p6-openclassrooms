@@ -4,19 +4,13 @@ const mongoose = require("mongoose");
 const errorhandler = require("errorhandler");
 const authRoutes = require("./routes/auth");
 const sauceRoutes = require("./routes/sauce");
+const dotenv = require("dotenv");
 const path = require("path");
-const app = express();
-app.use(helmet());
-app.use("/api/auth", authRoutes);
-app.use("/api/sauce", sauceRoutes);
-app.use("/images", express.static(path.join(__dirname, "images")));
-if (process.env.NODE_ENV === "development") {
-  app.use(errorhandler());
-}
+
+dotenv.config();
+
 mongoose
-  .connect(
-    "mongodb+srv://headhuncho:9GoPPVKDOhs7s9Ol@cluster0.jgjzm.mongodb.net/piiquante?retryWrites=true&w=majority"
-  )
+  .connect(process.env.mongo_atlas)
   .then(() => {
     console.log("Successfully connected to MongoDB Atlas!");
   })
@@ -24,4 +18,14 @@ mongoose
     console.log("Unable to connect to MongoDB Atlas!");
     console.error(error);
   });
+const app = express();
+app.use(helmet());
+app.use("/api/auth", authRoutes);
+app.use("/api/sauce", sauceRoutes);
+app.use("/images", express.static(path.join(__dirname, "images")));
+
+if (process.env.NODE_ENV === "development") {
+  app.use(errorhandler());
+}
+
 module.exports = app;
