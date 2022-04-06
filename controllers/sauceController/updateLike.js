@@ -1,9 +1,15 @@
 const Sauce = require("../../models/sauce");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+dotenv.config();
 
 exports.updateLike = (req, res, next) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+  const userId = decodedToken;
   let currentSauce = Sauce.find({ _id: req.params._id });
   let sauce;
-  if (currentSauce.usersLiked.includes("userId")) {
+  if (currentSauce.usersLiked.includes(userId)) {
     if (req.params.like === 1) {
       return res.status(400).json({
         message: "You already liked this sauce",
@@ -14,8 +20,8 @@ exports.updateLike = (req, res, next) => {
         {
           $inc: { dislike: 1 },
           $inc: { like: -1 },
-          $pull: { usersLiked: "userId" },
-          $push: { usersDisliked: "userId" },
+          $pull: { usersLiked: userId },
+          $push: { usersDisliked: userId },
         }
       );
     } else {
@@ -23,19 +29,19 @@ exports.updateLike = (req, res, next) => {
         { _id: req.params._id },
         {
           $inc: { like: -1 },
-          $pull: { usersLiked: "userId" },
+          $pull: { usersLiked: userId },
         }
       );
     }
-  } else if (currentSauce.usersDisliked.includes("userId")) {
+  } else if (currentSauce.usersDisliked.includes(userId)) {
     if (req.params.like === 1) {
       sauce = new Sauce(
         { _id: req.params._id },
         {
           $inc: { dislike: -1 },
           $inc: { like: 1 },
-          $push: { usersLiked: "userId" },
-          $pull: { usersDisliked: "userId" },
+          $push: { usersLiked: userId },
+          $pull: { usersDisliked: userId },
         }
       );
     } else if (req.params.like === -1) {
@@ -47,7 +53,7 @@ exports.updateLike = (req, res, next) => {
         { _id: req.params._id },
         {
           $inc: { dislike: -1 },
-          $pull: { usersDisliked: "userId" },
+          $pull: { usersDisliked: userId },
         }
       );
     }
@@ -57,7 +63,7 @@ exports.updateLike = (req, res, next) => {
         { _id: req.params._id },
         {
           $inc: { like: 1 },
-          $push: { usersLiked: "userId" },
+          $push: { usersLiked: userId },
         }
       );
     } else if (req.params.like === -1) {
@@ -65,7 +71,7 @@ exports.updateLike = (req, res, next) => {
         { _id: req.params._id },
         {
           $inc: { dislike: 1 },
-          $push: { usersDisliked: "userId" },
+          $push: { usersDisliked: userId },
         }
       );
     } else {
@@ -73,6 +79,6 @@ exports.updateLike = (req, res, next) => {
     }
   }
   Sauce.findByIdAndUpdate({ _id: req.params._id }, sauce).then((sauce) => {
-    res.status(200).json({ userId: "userId", like: sauce.likes });
+    res.status(200).json({ userId: userId, like: sauce.likes });
   });
 };

@@ -1,7 +1,12 @@
 const Sauce = require("../../models/sauce");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+dotenv.config();
 exports.updateSauce = (req, res, next) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+  const userId = decodedToken;
   let sauce = new Sauce({ _id: req.params._id });
-  const userId = "userId";
   if (req.file) {
     const url = req.protocol + "://" + req.get("host");
     req.body.sauce = JSON.parse(req.body.sauce);
@@ -21,7 +26,7 @@ exports.updateSauce = (req, res, next) => {
     } = req.body.sauce;
     sauce = {
       _id: req.params._id,
-      userId: "userid",
+      userId: userId,
       name,
       manufacturer,
       description,
@@ -34,7 +39,6 @@ exports.updateSauce = (req, res, next) => {
       userDislikes,
     };
   } else {
-    const userId = "userId";
     const {
       name,
       manufacturer,
@@ -48,7 +52,7 @@ exports.updateSauce = (req, res, next) => {
     } = req.body;
     sauce = {
       _id: req.params._id,
-      userId: "userId",
+      userId: userId,
       name,
       manufacturer,
       description,

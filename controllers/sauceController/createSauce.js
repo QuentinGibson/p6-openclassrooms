@@ -1,7 +1,14 @@
 const Sauce = require("../../models/sauce");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+dotenv.config();
 
 exports.createSauce = (req, res, next) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+  const userId = decodedToken;
   let sauce;
+
   if (req.file) {
     const url = req.protocol + "://" + req.get("host");
     req.body.sauce = JSON.parse(req.body.sauce);
@@ -10,7 +17,7 @@ exports.createSauce = (req, res, next) => {
 
     sauce = new Sauce({
       name,
-      userId: "userId",
+      userId: userId,
       manufacturer,
       description,
       imageUrl: url + "/images/" + req.file.filename,
@@ -24,7 +31,7 @@ exports.createSauce = (req, res, next) => {
   } else {
     sauce = {
       name: req.body.name,
-      userId: "userId",
+      userId: userId,
       manufacturer: req.body.manufacturer,
       description: req.body.description,
       imageUrl: "",
