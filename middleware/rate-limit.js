@@ -1,4 +1,5 @@
 const { RateLimiterMemory } = require("rate-limiter-flexible");
+
 const opts = {
   points: 6, // 6 points
   duration: 1, // Per second
@@ -7,10 +8,13 @@ const opts = {
 const rateLimiter = new RateLimiterMemory(opts);
 
 module.exports = (req, res, next) => {
+  const ipAddress =
+    req.header("x-forwarded-for") || req.connection.remoteAddress;
   rateLimiter
-    .consume(userId, 2) // consume 2 points
+    .consume(ipAddress, 2) // consume 2 points
     .then((rateLimiterRes) => {
       // 2 points consumed
+      console.log("Limit: " + rateLimiterRes);
       next();
     })
     .catch((rateLimiterRes) => {

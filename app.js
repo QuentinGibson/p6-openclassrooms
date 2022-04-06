@@ -2,6 +2,7 @@ const express = require("express");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
 const errorhandler = require("errorhandler");
+var cors = require("cors");
 const authRoutes = require("./routes/auth");
 const sauceRoutes = require("./routes/sauce");
 const dotenv = require("dotenv");
@@ -20,6 +21,7 @@ mongoose
   });
 const app = express();
 app.use(helmet());
+app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/sauce", sauceRoutes);
 app.use("/images", express.static(path.join(__dirname, "images")));
