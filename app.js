@@ -1,5 +1,6 @@
 const express = require("express");
 const helmet = require("helmet");
+const mongoose = require("mongoose");
 const errorhandler = require("errorhandler");
 const authRoutes = require("./routes/auth");
 const sauceRoutes = require("./routes/sauce");
@@ -13,4 +14,15 @@ if (process.env.NODE_ENV === "development") {
   // only use in development
   app.use(errorhandler());
 }
+mongoose
+  .connect(
+    "mongodb+srv://headhuncho:9GoPPVKDOhs7s9Ol@cluster0.jgjzm.mongodb.net/piiquante?retryWrites=true&w=majority"
+  )
+  .then(() => {
+    console.log("Successfully connected to MongoDB Atlas!");
+  })
+  .catch((error) => {
+    console.log("Unable to connect to MongoDB Atlas!");
+    console.error(error);
+  });
 module.exports = app;
