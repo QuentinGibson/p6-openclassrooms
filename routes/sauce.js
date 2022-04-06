@@ -7,7 +7,7 @@ const { getSauce } = require("../controllers/sauceController/getSauce");
 const { updateSauce } = require("../controllers/sauceController/updateSauce");
 const auth = require("../middleware/auth");
 
-const router = express.Router;
+const router = express.Router();
 
 router.get("/", auth, getAllSauces);
 router.get("/:id", auth, getSauce);
