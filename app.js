@@ -1,6 +1,7 @@
 const express = require("express");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const errorhandler = require("errorhandler");
 var cors = require("cors");
 const authRoutes = require("./routes/auth");
@@ -20,10 +21,10 @@ mongoose
     console.error(error);
   });
 const app = express();
-app.use(helmet());
 app.use(cors());
+app.use(bodyParser.json());
 app.use("/api/auth", authRoutes);
-app.use("/api/sauce", sauceRoutes);
+app.use("/api/sauces", sauceRoutes);
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 if (process.env.NODE_ENV === "development") {
