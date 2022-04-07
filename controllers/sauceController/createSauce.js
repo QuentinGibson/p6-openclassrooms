@@ -6,7 +6,7 @@ dotenv.config();
 exports.createSauce = (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
   const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
-  const userId = decodedToken;
+  const { userId } = decodedToken;
   let sauce;
 
   if (req.file) {
@@ -25,8 +25,8 @@ exports.createSauce = (req, res, next) => {
       heat,
       likes: 0,
       dislikes: 0,
-      userLikes: [],
-      userDislikes: [],
+      usersLiked: [],
+      usersDisliked: [],
     });
   } else {
     sauce = {
@@ -39,8 +39,8 @@ exports.createSauce = (req, res, next) => {
       heat: req.body.heat,
       likes: 0,
       dislikes: 0,
-      userLikes: [],
-      userDislikes: [],
+      usersLiked: [],
+      usersDisliked: [],
     };
   }
   sauce
@@ -51,6 +51,7 @@ exports.createSauce = (req, res, next) => {
       });
     })
     .catch((error) => {
+      console.error(`Could not save sauce: ${error}`);
       res.status(400).json({
         error,
       });

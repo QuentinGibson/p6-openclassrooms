@@ -6,6 +6,7 @@ exports.getAllSauces = (req, res, next) => {
       res.status(200).json(sauces);
     })
     .catch((error) => {
+      console.error(error);
       res.status(400).json({
         error,
       });

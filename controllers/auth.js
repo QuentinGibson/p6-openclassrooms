@@ -18,6 +18,7 @@ exports.signup = (req, res, next) => {
           });
         })
         .catch((error) => {
+          console.error("Could not save new user: " + error);
           res.status(500).json({
             error,
           });
@@ -47,7 +48,7 @@ exports.login = (req, res, next) => {
           }
           const token = jwt.sign(
             { userId: user._id },
-            process.env.TOKENSECRET,
+            process.env.TOKEN_SECRET,
             {
               expiresIn: "24h",
             }

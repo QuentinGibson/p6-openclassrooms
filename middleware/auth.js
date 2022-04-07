@@ -1,16 +1,19 @@
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+dotenv.config();
 
 module.exports = (req, res, next) => {
   try {
-    const token = req.header.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.TOKENSECRET);
+    const token = req.headers["authorization"].split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
     const userId = decodedToken.userId;
-    if (req.body.userId && req.body.userId === userId) {
+    if (req.body.userId && req.body.userId !== userId) {
       throw "Invalid user ID";
     } else {
       next();
     }
-  } catch {
+  } catch (error) {
+    console.log("Error when auth: " + error);
     res.status(500).json({
       error: new Error("Invalid request"),
     });
