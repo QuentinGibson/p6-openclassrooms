@@ -5,12 +5,12 @@ dotenv.config();
 exports.updateSauce = (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
   const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
-  const userId = decodedToken;
+  const { userId } = decodedToken;
   let sauce = new Sauce({ _id: req.params._id });
   if (req.file) {
     const url = req.protocol + "://" + req.get("host");
     req.body.sauce = JSON.parse(req.body.sauce);
-    if (!userId === req.body.sauce) {
+    if (!userId === req.body.sauce.userId) {
       return res.status(400).json({ error: "Failed to update sauce" });
     }
     const {
@@ -64,7 +64,7 @@ exports.updateSauce = (req, res, next) => {
       userDislikes,
     };
   }
-  Sauce.findByIdAndUpdate({ _id: req.params.id }, sauce)
+  Sauce.updateOne({ _id: req.params.id }, sauce)
     .then(() => {
       res.status(201).json({
         message: "Sauce updated successfully",
