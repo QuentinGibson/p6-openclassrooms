@@ -1,5 +1,5 @@
 const express = require("express");
-const multer = require("multer");
+const multer = require("../middleware/multer-config");
 const { createSauce } = require("../controllers/sauceController/createSauce");
 const { deleteSauce } = require("../controllers/sauceController/deleteSauce");
 const { getAllSauces } = require("../controllers/sauceController/getAllSauces");
