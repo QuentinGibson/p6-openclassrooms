@@ -13,8 +13,10 @@ module.exports = (req, res, next) => {
   rateLimiter
     .consume(ipAddress, 2) // consume 2 points
     .then((rateLimiterRes) => {
+      console.log(
+        `rate info: ipdress - ${ipAddress}, score - ${rateLimiterRes}`
+      );
       // 2 points consumed
-      console.log("Limit: " + rateLimiterRes);
       next();
     })
     .catch((rateLimiterRes) => {
