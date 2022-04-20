@@ -1,6 +1,6 @@
 # Welcome to my Project
 
-This project is from Openclassrooms. This api I created is meant to be used with the front-end they provided.
+This project is from Openclassrooms. This api I created is meant to be used with the front-end they provided, for "Hot Ones," Piiquante
 
 ## Dependieces
 
