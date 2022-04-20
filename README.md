@@ -12,9 +12,15 @@ This project requires Node.js to be installed
 
   `git clone `
 
+- Populate the env file with a mongodatabase url and a secret phrase for your token, check env_example.
+
 - Then download the node modules
 
   `npm install`
+
+- Then run the server
+
+  `npm start`
 
 ## NPM Commands
 
