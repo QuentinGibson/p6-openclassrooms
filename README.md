@@ -23,5 +23,5 @@ This project requires Node.js to be installed
 Starts a server on port 3000. You can change this port by providing a value to PORT
 
 ```
-PORT =${number} npm start
+PORT ={PORT_NUMBER} npm start
 ```
