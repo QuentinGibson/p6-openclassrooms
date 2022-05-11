@@ -31,3 +31,7 @@ Starts a server on port 3000. You can change this port by providing a value to P
 ```
 PORT ={PORT_NUMBER} npm start
 ```
+
+## Require ENV Values
+
+In order to start make sure you provide a NOSQL link to `mongo_atlas` and a password to `TOKEN_SECRET`
