@@ -21,6 +21,11 @@ mongoose
     console.error(error);
   });
 const app = express();
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "same-site" },
+  })
+);
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/api/auth", authRoutes);
